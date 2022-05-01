@@ -21,5 +21,6 @@ module.exports = {
     'no-unexpected-multiline': 'error',
     'no-unreachable': 'error',
     'no-plusplus': 'off',
+    'max-len': 'off',
   },
 }
