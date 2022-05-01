@@ -22,5 +22,6 @@ module.exports = {
     'no-unreachable': 'error',
     'no-plusplus': 'off',
     'max-len': 'off',
+    'lines-between-class-members': 'off',
   },
 }
