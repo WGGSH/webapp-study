@@ -28,12 +28,18 @@ export default defineComponent({
       max: 10,
     }
   },
+  computed: {
+    field() : any {
+      return this.$refs.field as any
+    },
+  },
   methods: {
     onClickStartButton() {
-      (this.$refs.field as any).initialize()
+      this.field.initialize()
+      this.field.shuffle(this.size * this.size * 100)
     },
     onClickShuffleButton() {
-      (this.$refs.field as any).shuffle(this.size * this.size * 100)
+      this.field.shuffle(this.size * this.size * 100)
     },
   },
 })

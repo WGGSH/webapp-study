@@ -34,13 +34,6 @@ export default defineComponent({
       return !this.isNull
     },
   },
-  methods: {
-    onClick() {
-      alert('hoge')
-      console.log(this.value)
-      console.log(this.isNull)
-    },
-  },
 })
 </script>
 
