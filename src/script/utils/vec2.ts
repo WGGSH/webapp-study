@@ -34,4 +34,12 @@ export default class Vec2 {
     this.y -= v.y
     return this
   }
+
+  public isZero(): boolean {
+    return this.x === 0 && this.y === 0
+  }
+
+  static isZero(v: Vec2): boolean {
+    return v.x === 0 && v.y === 0
+  }
 }

@@ -70,7 +70,7 @@ export default defineComponent({
     moveCell(p: Vec2): void {
       if (this.isNullCell(p)) return
       const vec: Vec2 = this.searchNullCellFromTargetCell(p)
-      if (vec.x !== 0 || vec.y !== 0) {
+      if (!vec.isZero()) {
         this.swapCell(p, vec)
       }
     },
