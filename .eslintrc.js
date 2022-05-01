@@ -20,5 +20,6 @@ module.exports = {
     'no-extra-semi': 'error',
     'no-unexpected-multiline': 'error',
     'no-unreachable': 'error',
+    'no-plusplus': 'off',
   },
 }
