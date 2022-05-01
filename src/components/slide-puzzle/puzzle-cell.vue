@@ -1,6 +1,6 @@
 <template>
   <div class="cell" :class="{ isNull: isNull }" :click="onClick">
-    <span v-if="showValue">
+    <span v-if="showValue" class="value">
       {{ value }}
     </span>
   </div>
@@ -57,6 +57,10 @@ export default defineComponent({
 
   &.isNull {
     background: white;
+  }
+
+  .value {
+    transform: scale(1.8,1.8);
   }
 }
 </style>

@@ -48,12 +48,20 @@ export default defineComponent({
     isNullCell(y:number, x:number): boolean {
       return this.field[y][x] === 0
     },
-    searchNullCell(y: number, x:number): boolean | Array<number> {
+    searchNullCellFromTargetCell(y: number, x:number): Array<number> {
       if (x !== 0 && this.field[y][x - 1] === 0) return [0, -1]
       if (y !== 0 && this.field[y - 1][x] === 0) return [-1, 0]
       if (x !== this.size - 1 && this.field[y][x + 1] === 0) return [0, 1]
       if (y !== this.size - 1 && this.field[y + 1][x] === 0) return [1, 0]
-      return false
+      return [0, 0]
+    },
+    searchNullCellFromField() : Array<number> {
+      for (let y = 0; y < this.size; y++) {
+        for (let x = 0; x < this.size; x++) {
+          if (this.field[y][x] === 0) return [y, x]
+        }
+      }
+      return [0, 0]
     },
     swapCell(from: Array<number>, vec: Array<number>): void {
       const tmp: number = this.field[from[0]][from[1]]
@@ -61,10 +69,22 @@ export default defineComponent({
       this.field[from[0] + vec[0]][from[1] + vec[1]] = tmp
     },
     onClickCell(y: number, x: number): void {
+      this.moveCell(y, x)
+    },
+    moveCell(y: number, x: number): void {
       if (this.isNullCell(y, x)) return
-      const vec: boolean | Array<number> = this.searchNullCell(y, x)
-      if (vec !== false) {
-        this.swapCell([y, x], vec as Array<number>)
+      const vec: boolean | Array<number> = this.searchNullCellFromTargetCell(y, x)
+      if (vec[0] !== 0 || vec[1] !== 0) {
+        this.swapCell([y, x], vec)
+      }
+    },
+    getRandomInt(min: number, max: number): number {
+      return Math.floor(Math.random() * (max + 1 - min)) + min
+    },
+    shuffle(count: number): void {
+      for (let i = 0; i < count; i++) {
+        const cell = [this.getRandomInt(0, this.size - 1), this.getRandomInt(0, this.size - 1)]
+        this.moveCell(cell[0], cell[1])
       }
     },
   },
