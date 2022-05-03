@@ -21,7 +21,7 @@ export default defineComponent({
     return {
       size: 4,
       min: 2,
-      max: 10,
+      max: 7,
     }
   },
   computed: {
