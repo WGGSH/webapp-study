@@ -17,6 +17,7 @@ export default createVuetify({
       custom: {
         dark: true,
         colors: {
+          background: '#202020',
         },
         variables: {
 
