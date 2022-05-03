@@ -1,9 +1,9 @@
 <template>
-  <div class="cell" :class="{ isNull: isNull }">
-    <span v-if="showValue" class="value">
+  <v-card class="cell rounded-lg" :class="{ isNull: isNull }">
+    <v-card-text v-if="showValue" class="value">
       {{ value }}
-    </span>
-  </div>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -42,9 +42,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   text-align: center;
-  border: solid 1px cyan;
-  margin: -1px;
-  display: grid;
+  box-shadow: 0 0 5px 0.1px white;
   place-items: center;
   pointer-events: auto;
 
@@ -54,6 +52,7 @@ export default defineComponent({
 
   .value {
     transform: scale(1.8,1.8);
+    pointer-events: none;
   }
 }
 </style>
