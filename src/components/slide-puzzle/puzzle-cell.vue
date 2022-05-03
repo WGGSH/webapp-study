@@ -1,5 +1,5 @@
 <template>
-  <div class="cell" :class="{ isNull: isNull }" :click="onClick">
+  <div class="cell" :class="{ isNull: isNull }">
     <span v-if="showValue" class="value">
       {{ value }}
     </span>
