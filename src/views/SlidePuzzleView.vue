@@ -29,8 +29,8 @@ export default defineComponent({
     }
   },
   computed: {
-    field() : any {
-      return this.$refs.field as any
+    field() : any { // eslint-disable-line
+      return this.$refs.field as any // eslint-disable-line
     },
   },
   methods: {

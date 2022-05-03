@@ -23,5 +23,6 @@ module.exports = {
     'no-plusplus': 'off',
     'max-len': 'off',
     'lines-between-class-members': 'off',
+    'no-continue': 'off',
   },
 }

@@ -30,6 +30,7 @@ export default defineComponent({
     return {
       field: [] as Array<Array<number>>,
       size: 0 as number,
+      isPlaying: false as boolean,
     }
   },
   methods: {
@@ -48,6 +49,7 @@ export default defineComponent({
           }
         }
       }
+      this.isPlaying = false
     },
     isNullCell(p: Vec2): boolean {
       return this.field[p.y][p.x] === 0
@@ -78,15 +80,32 @@ export default defineComponent({
       return Math.floor(Math.random() * (max + 1 - min)) + min
     },
     shuffle(count: number): void {
+      this.isPlaying = false
       for (let i = 0; i < count; i++) {
         const cell = new Vec2(this.getRandomInt(0, this.size - 1), this.getRandomInt(0, this.size - 1))
         this.moveCell(cell)
       }
+      this.isPlaying = true
     },
   },
   computed: {
     styleLineHeight(): string {
       return `height: ${100.0 / this.size}%`
+    },
+    isPuzzleClear(): boolean {
+      if (this.isPlaying === false) return false
+
+      let result = true
+      for (let y = 0; y < this.size; y++) {
+        for (let x = 0; x < this.size; x++) {
+          if (y === this.size - 1 && x === this.size - 1) {
+            if (this.field[y][x] !== 0) result = false
+            continue
+          }
+          if (this.field[y][x] !== y * this.size + x + 1) result = false
+        }
+      }
+      return result
     },
   },
 })
