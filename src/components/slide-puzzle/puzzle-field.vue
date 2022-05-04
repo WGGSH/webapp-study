@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="slide-puzzle-container">
     <div class="field">
       <div v-for="(line, y) in field" :key=line[0] class="line" :style="styleLineHeight">
         <div v-for="(cell, x) in line" :key=cell class="cell">
@@ -113,7 +113,7 @@ export default defineComponent({
 
 <style lang="scss">
 
-.container {
+.slide-puzzle-container {
   width: 90%;
   margin: 16px auto 0;
   position: relative;
