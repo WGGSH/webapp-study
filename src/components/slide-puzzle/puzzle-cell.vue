@@ -1,5 +1,5 @@
 <template>
-  <v-card class="cell rounded-lg" :class="{ isNull: isNull }">
+  <v-card class="slide-puzzle-cell rounded-lg" :class="{ isNull: isNull }">
     <v-card-text v-if="showValue" class="value">
       {{ value }}
     </v-card-text>
@@ -38,7 +38,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.cell {
+.slide-puzzle-cell {
   width: 100%;
   height: 100%;
   text-align: center;
