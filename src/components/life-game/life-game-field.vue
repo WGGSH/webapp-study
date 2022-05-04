@@ -27,7 +27,6 @@ export default defineComponent({
   methods: {
     onClickCell(y: number, x: number): void {
       this.field[y][x] = !this.field[y][x]
-      console.log(y, x)
     },
     cellColor(y: number, x: number): string {
       if (this.field[y][x]) return 'primary'
@@ -39,6 +38,7 @@ export default defineComponent({
         tmpField[y] = new Array<boolean>(this.size_x)
         for (let x = 0; x < this.size_x; x++) {
           let fillCount = 0
+
           for (let y2 = -1; y2 <= 1; y2++) {
             for (let x2 = -1; x2 <= 1; x2++) {
               if (y2 === 0 && x2 === 0) continue
@@ -129,10 +129,9 @@ export default defineComponent({
 
       .cell {
         width: 100%;
-        height: 100%;
         text-align: center;
+        border-radius: 8px;
         box-shadow: 0 0 1px 1px white;
-        place-items: center;
         pointer-events: auto;
       }
     }
