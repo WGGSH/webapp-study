@@ -35,7 +35,7 @@ export default defineComponent({
       type: Number,
       required: true,
     },
-    direction: {
+    isFront: {
       type: Boolean,
       required: true,
     },
@@ -49,13 +49,13 @@ export default defineComponent({
     markDisplay() {
       switch (this.mark) {
         case 0:
-          return '♠'
+          return '♤'
         case 1:
-          return '♥'
+          return '♡'
         case 2:
-          return '◆'
+          return '◇'
         case 3:
-          return '♣'
+          return '♧'
         default:
           return ''
       }
@@ -71,8 +71,9 @@ export default defineComponent({
 <style lang="scss">
 
 .solitaire-card {
-  width: 80px;
-  height: 120px;
+  width: 100%;
+  height: 60px;
+  box-shadow: 0 0 2px 2px black;
 
   &.color-red {
     > .title {
@@ -98,8 +99,8 @@ export default defineComponent({
     height: 100%;
     padding: 0;
     display: flex;
-    font-size: 24px;
-    margin-bottom: -24px;
+    font-size: 18px;
+    margin-bottom: -18px;
 
     > .mark {
       margin-right: auto;
@@ -107,7 +108,7 @@ export default defineComponent({
 
     > .number {
       margin-left: auto;
-      margin-right: 4px;
+      margin-right: 2px;
       transform: scale(1.25, 1.0);
     }
   }
@@ -116,11 +117,11 @@ export default defineComponent({
     height: 100%;
     padding: 0;
     display: flex;
-    font-size: 24px;
+    font-size: 18px;
 
     > .number {
       margin-right: auto;
-      margin-left: 4px;
+      margin-left: 2px;
       transform: scale(1.25, 1.0);
     }
 
