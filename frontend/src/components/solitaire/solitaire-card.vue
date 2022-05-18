@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="solitaire-card" color="white" :class="colorClass">
+    <v-card v-if="isFront" class="solitaire-card" color="white" :class="colorClass">
       <v-card-text class="title">
         <span class="mark">
           {{ markDisplay }}
@@ -17,6 +17,8 @@
           {{ markDisplay }}
         </span>
       </v-card-text>
+    </v-card>
+    <v-card v-else class="solitaire-card" color="red">
     </v-card>
   </div>
 </template>
