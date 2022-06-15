@@ -66,6 +66,7 @@ export default defineComponent({
       field: [] as Array<Array<SolitaireCard>>,
       pairs: [] as Array<Array<SolitaireCard>>,
       decks: [] as Array<SolitaireCard>,
+      selectedCard: null as SolitaireCard|null,
     }
   },
   computed: {
@@ -80,8 +81,17 @@ export default defineComponent({
     styleTop(num: number) {
       return { '--top': `${num}px` }
     },
-    onClickCard(a: number, b: number): void {
-      console.log(a, b)
+    getBottomCard(x: number) {
+      const column = this.field[x]
+      return column[column.length - 1]
+    },
+    onClickCard(x: number, y: number): void {
+      if (this.selectedCard === null) {
+        this.selectedCard = this.getBottomCard(x)
+      } else {
+        console.log('hoge')
+      }
+      console.log(this.selectedCard)
     },
     shuffle() {
       const cloneCards: Array<SolitaireCard> = [...this.allCards]

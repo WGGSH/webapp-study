@@ -73,7 +73,7 @@ export default defineComponent({
 <style lang="scss">
 
 .solitaire-card {
-  width: 100%;
+  width: 40px;
   height: 60px;
   box-shadow: 0 0 2px 2px black;
 
