@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card v-if="isFront" class="solitaire-card" color="white" :class="colorClass">
+    <v-card v-if="isFront" class="solitaire-card" color="white" :class="[colorClass, { 'is-select': isSelect }]">
       <v-card-text class="title">
         <span class="mark">
           {{ markDisplay }}
@@ -41,6 +41,10 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    isSelect: {
+      type: Boolean,
+      required: false,
+    },
   },
   computed: {
     numberDisplay() {
@@ -76,6 +80,10 @@ export default defineComponent({
   width: 40px;
   height: 60px;
   box-shadow: 0 0 2px 2px black;
+
+  &.is-select {
+    box-shadow: 0 0 4px 4px blue;
+  }
 
   &.color-red {
     > .title {

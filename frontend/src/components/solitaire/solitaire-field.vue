@@ -6,11 +6,12 @@
         <div class="pairs">
         <div v-for="(row, index_row) in pairs" :key="`pairs-${index_row}`" class="row">
           <div v-for="(card) in row" :key="`13 * ${card.mark} + ${card.number}`" class="card">
-            <VSolitaireCardNull v-if="card.isNull"></VSolitaireCardNull>
+            <VSolitaireCardNull v-if="card.isNull" @click="onClickPairCard(index_row)"></VSolitaireCardNull>
             <VSolitaireCard v-else
               :number="card.number"
               :mark="card.mark"
               :isFront="card.isFront"
+              @click="onClickPairCard(index_row)"
               class="card"
             >
             </VSolitaireCard>
@@ -29,17 +30,20 @@
       </div>
       <div class="field">
         <div v-for="(row, index_row) in field" :key="`field-${index_row}`" class="row">
-          <VSolitaireCard
-            v-for="(card, index_column) in row"
-            :key="`13 * ${card.mark} + ${card.number}`"
-            :number="card.number"
-            :mark="card.mark"
-            :isFront="card.isFront"
-            :style="styleTop(index_column * 18)"
-            @click="onClickCard(index_row, index_column)"
-            class="card"
-          >
-          </VSolitaireCard>
+          <div v-for="(card, index_column) in row" :key="`13 * ${card.mark} + ${card.number}`" class="card">
+            <VSolitaireCardNull v-if="card.isNull"></VSolitaireCardNull>
+            <VSolitaireCard
+              v-else
+              :number="card.number"
+              :mark="card.mark"
+              :isFront="card.isFront"
+              :isSelect="card.isSelect"
+              :style="styleTop(index_column * 18)"
+              @click="onClickFieldCard(index_row, index_column)"
+              class="card"
+              >
+            </VSolitaireCard>
+          </div>
         </div>
       </div>
     </div>
@@ -67,6 +71,7 @@ export default defineComponent({
       pairs: [] as Array<Array<SolitaireCard>>,
       decks: [] as Array<SolitaireCard>,
       selectedCard: null as SolitaireCard|null,
+      selectedFieldRow: -1 as number,
     }
   },
   computed: {
@@ -81,17 +86,45 @@ export default defineComponent({
     styleTop(num: number) {
       return { '--top': `${num}px` }
     },
-    getBottomCard(x: number) {
+    getFieldBottomCard(x: number) {
       const column = this.field[x]
       return column[column.length - 1]
     },
-    onClickCard(x: number, y: number): void {
+    getPairCard(x: number) {
+      return this.pairs[x][this.pairs[x].length - 1]
+    },
+    isSelect(row: number, column: number) {
+      return true
+    },
+    onClickFieldCard(x: number, y: number): void {
       if (this.selectedCard === null) {
-        this.selectedCard = this.getBottomCard(x)
+        // 選択中のカードがない場合,タップしたカードを選択状態にする
+        this.getFieldBottomCard(x).isSelect = true
+        this.selectedCard = this.getFieldBottomCard(x)
+        this.selectedFieldRow = x
+      } else {
+        // 選択中のカードがある場合,タップしたカードに応じて選択状態やアクションを決定する
+        this.selectedCard.isSelect = false
+        this.getFieldBottomCard(x).isSelect = true
+        this.selectedCard = this.getFieldBottomCard(x)
+        this.selectedFieldRow = x
+      }
+    },
+    onClickPairCard(x: number): void {
+      if (this.selectedCard === null) {
+        console.log(this.getPairCard(x))
       } else {
         console.log('hoge')
+        if ((this.selectedCard.number === 1 && this.getPairCard(x).isNull)
+            || (this.selectedCard.number === this.getPairCard(x).number + 1 && this.selectedCard.mark === this.getPairCard(x).mark)) {
+          console.log('move')
+          this.pairs[x].push(this.selectedCard)
+          this.selectedCard = null
+          const selectedRow = this.field[this.selectedFieldRow]
+          selectedRow.pop()
+          selectedRow[selectedRow.length - 1].isFront = true
+        }
       }
-      console.log(this.selectedCard)
     },
     shuffle() {
       const cloneCards: Array<SolitaireCard> = [...this.allCards]
@@ -135,9 +168,10 @@ export default defineComponent({
     let count = 0
     for (let i = 0; i < 7; i++) {
       this.field[i] = new Array(0)
+      this.field[i].push(new SolitaireCard(0, 0, false, true))
       for (let j = 0; j <= i; j++) {
         this.field[i].push(this.allCards[count++])
-        this.field[i][j].isFront = (i === j)
+        this.field[i][j].isFront = (i === j - 1)
       }
     }
 
@@ -200,9 +234,11 @@ export default defineComponent({
         position: relative;
 
         > .card {
-          position: absolute;
-          width: 100%;
-          top: var(--top);
+          > .card {
+            position: absolute;
+            width: 100%;
+            top: var(--top);
+          }
         }
       }
     }

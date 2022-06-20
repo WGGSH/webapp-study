@@ -10,7 +10,7 @@
 <style lang="scss">
 
 .solitaire-card-null {
-  width: 100%;
+  width: 40px;
   height: 60px;
   box-shadow: 0 0 2px 2px black;
   background: rgba(white, 0.3);
