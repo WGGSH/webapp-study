@@ -18,12 +18,29 @@
           </div>
         </div>
         </div>
-        <div class="deck">
+        <div class="hand">
+          <VSolitaireCardNull
+            v-if="handTop.isNull"
+          />
           <VSolitaireCard
+            v-else
+            :number="handTop.number"
+            :mark="handTop.mark"
+            :isFront="true"
+          />
+        </div>
+        <div class="deck">
+          <VSolitaireCardNull
+            v-if="deckTop.isNull"
+            @click="onClickDeckEmpty"
+          />
+          <VSolitaireCard
+            v-else
             :number="deckTop.number"
             :mark="deckTop.mark"
-            :isFront="true"
+            :isFront="false"
             class="card"
+            @click="onClickDeck"
           >
           </VSolitaireCard>
         </div>
@@ -70,6 +87,7 @@ export default defineComponent({
       field: [] as Array<Array<SolitaireCard>>,
       pairs: [] as Array<Array<SolitaireCard>>,
       decks: [] as Array<SolitaireCard>,
+      hands: [] as Array<SolitaireCard>,
       selectedCard: null as SolitaireCard|null,
       selectedFieldRow: -1 as number,
     }
@@ -77,7 +95,13 @@ export default defineComponent({
   computed: {
     deckTop(): SolitaireCard {
       if (Array.isArray(this.decks)) {
-        return this.decks[0]
+        return this.decks[this.decks.length - 1]
+      }
+      return new SolitaireCard(0, 0, true, true)
+    },
+    handTop(): SolitaireCard {
+      if (Array.isArray(this.hands)) {
+        return this.hands[this.hands.length - 1]
       }
       return new SolitaireCard(0, 0, true, true)
     },
@@ -109,6 +133,19 @@ export default defineComponent({
         this.selectedCard = this.getFieldBottomCard(x)
         this.selectedFieldRow = x
       }
+    },
+    onClickDeck() {
+      this.selectedCard = null
+      this.hands.push(this.deckTop)
+      this.decks.pop()
+    },
+    onClickDeckEmpty() {
+      this.hands.reverse().forEach((hand) => {
+        if (hand.isNull) return
+        this.decks.push(hand)
+      })
+      this.hands = new Array(0)
+      this.hands.push(new SolitaireCard(0, 0, true, true))
     },
     onClickPairCard(x: number): void {
       if (this.selectedCard === null) {
@@ -176,9 +213,13 @@ export default defineComponent({
     }
 
     this.decks = new Array(0)
+    this.decks.push(new SolitaireCard(0, 0, true, true))
     for (let i = count; i < this.allCards.length; i++) {
       this.decks.push(this.allCards[i])
     }
+
+    this.hands = new Array(0)
+    this.hands.push(new SolitaireCard(0, 0, true, true))
 
     console.log(this.decks)
   },
@@ -215,6 +256,12 @@ export default defineComponent({
             position: absolute;
           }
         }
+      }
+
+      > .hand {
+        display: flex;
+        position: absolute;
+        right: 70px;
       }
 
       .deck {
