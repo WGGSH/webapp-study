@@ -35,6 +35,7 @@
             :number="handTop.number"
             :mark="handTop.mark"
             :isFront="true"
+            :isSelect="handTop.isSelect"
           />
         </div>
         <div class="deck">
@@ -153,13 +154,27 @@ export default defineComponent({
       return true
     },
     isPairCard(card: SolitaireCard): boolean {
-      return true
+      let result = false
+      this.pairs.forEach((pair) => {
+        pair.forEach((pairCard) => {
+          if (card === pairCard) {
+            result = true
+          }
+        })
+      })
+      return result
     },
     isHandCard(card: SolitaireCard): boolean {
       return true
     },
     isDeckCard(card: SolitaireCard): boolean {
-      return true
+      let result = false
+      this.decks.forEach((deckCard) => {
+        if (card === deckCard) {
+          result = true
+        }
+      })
+      return result
     },
     isFieldCard(card: SolitaireCard): boolean {
       let result = false
@@ -167,6 +182,28 @@ export default defineComponent({
         row.forEach((fieldCard) => {
           if (card === fieldCard) {
             result = true
+          }
+        })
+      })
+      return result
+    },
+    getTargetPair(card: SolitaireCard) {
+      let result = this.pairs[0]
+      this.pairs.forEach((pair) => {
+        pair.forEach((pairCard) => {
+          if (card === pairCard) {
+            result = pair
+          }
+        })
+      })
+      return result
+    },
+    getTargetFieldRow(card: SolitaireCard) {
+      let result = this.field[0]
+      this.field.forEach((row) => {
+        row.forEach((fieldCard) => {
+          if (card === fieldCard) {
+            result = row
           }
         })
       })
@@ -186,16 +223,46 @@ export default defineComponent({
     onClickCard(card: SolitaireCard) : void {
       // すでに選択中のカードの有無と,今選択したカードによって挙動を変更する
       if (this.selectedCard) {
-        console.log('fuga')
+        // 選択先のカードがペアの場合
+        if (this.isPairCard(card)) {
+          const pair = this.getTargetPair(card)
+          const bottomCard = pair[pair.length - 1]
+          // 選択中のカードがペアに置くことができるか判定
+          if ((bottomCard.mark === this.selectedCard.mark || bottomCard.isNull)
+            && bottomCard.number === this.selectedCard.number - 1) {
+            pair.push(this.selectedCard)
+            // 移動元のカードがフィールドか手札か判断
+            if (this.isFieldCard(this.selectedCard)) {
+              const row = this.getTargetFieldRow(this.selectedCard)
+              row.pop()
+              row[row.length - 1].isFront = true
+              this.selectedCard = null
+            } else if (this.isHandCard(this.selectedCard)) {
+              this.hands.pop()
+              this.hands[this.hands.length - 1].isFront = true
+              this.selectedCard = null
+            }
+          }
+        }
       } else {
+        // 選択中のカードがない場合
         if (this.isFieldCard(card)) {
+          // フィールドのカードを選択した場合
           this.selectedCard = this.getFieldBottomCard(card)
           this.selectedCard.isSelect = true
         } else {
+          // フィールド以外
           this.selectedCard = card
           this.selectedCard.isSelect = true
         }
-        console.log(this.isFieldCard(card))
+
+        // 山札ならめくる
+        if (this.isDeckCard(card)) {
+          this.selectedCard.isSelect = false
+          this.selectedCard = null
+          this.hands.push(this.deckTop)
+          this.decks.pop()
+        }
       }
     },
     // onClickFieldCard(x: number, y: number): void {
