@@ -6,12 +6,20 @@
         <div class="pairs">
         <div v-for="(row, index_row) in pairs" :key="`pairs-${index_row}`" class="row">
           <div v-for="(card) in row" :key="`13 * ${card.mark} + ${card.number}`" class="card">
-            <VSolitaireCardNull v-if="card.isNull" @click="onClickPairCard(index_row)"></VSolitaireCardNull>
+            <!-- <VSolitaireCardNull v-if="card.isNull" @click="onClickPairCard(index_row)"></VSolitaireCardNull> -->
+            <VSolitaireCardNull v-if="card.isNull" @click="onClickCard(card)"></VSolitaireCardNull>
+            <!-- <VSolitaireCard v-else -->
+            <!--   :number="card.number" -->
+            <!--   :mark="card.mark" -->
+            <!--   :isFront="card.isFront" -->
+            <!--   @click="onClickPairCard(index_row)" -->
+            <!--   class="card" -->
+            <!-- > -->
             <VSolitaireCard v-else
               :number="card.number"
               :mark="card.mark"
               :isFront="card.isFront"
-              @click="onClickPairCard(index_row)"
+              @click="onClickCard(card)"
               class="card"
             >
             </VSolitaireCard>
@@ -30,17 +38,30 @@
           />
         </div>
         <div class="deck">
+          <!-- <VSolitaireCardNull -->
+          <!--   v-if="deckTop.isNull" -->
+          <!--   @click="onClickDeckEmpty" -->
+          <!-- /> -->
           <VSolitaireCardNull
             v-if="deckTop.isNull"
-            @click="onClickDeckEmpty"
+            @click="onClickCard(deckTop)"
           />
+          <!-- <VSolitaireCard -->
+          <!--   v-else -->
+          <!--   :number="deckTop.number" -->
+          <!--   :mark="deckTop.mark" -->
+          <!--   :isFront="false" -->
+          <!--   class="card" -->
+          <!--   @click="onClickDeck" -->
+          <!-- > -->
+          <!-- </VSolitaireCard> -->
           <VSolitaireCard
             v-else
             :number="deckTop.number"
             :mark="deckTop.mark"
             :isFront="false"
             class="card"
-            @click="onClickDeck"
+            @click="onClickCard(deckTop)"
           >
           </VSolitaireCard>
         </div>
@@ -48,7 +69,18 @@
       <div class="field">
         <div v-for="(row, index_row) in field" :key="`field-${index_row}`" class="row">
           <div v-for="(card, index_column) in row" :key="`13 * ${card.mark} + ${card.number}`" class="card">
-            <VSolitaireCardNull v-if="card.isNull"></VSolitaireCardNull>
+            <VSolitaireCardNull v-if="card.isNull" @click="onClickCard(card)"></VSolitaireCardNull>
+            <!-- <VSolitaireCard -->
+            <!--   v-else -->
+            <!--   :number="card.number" -->
+            <!--   :mark="card.mark" -->
+            <!--   :isFront="card.isFront" -->
+            <!--   :isSelect="card.isSelect" -->
+            <!--   :style="styleTop(index_column * 18)" -->
+            <!--   @click="onClickFieldCard(index_row, index_column)" -->
+            <!--   class="card" -->
+            <!--   > -->
+            <!-- </VSolitaireCard> -->
             <VSolitaireCard
               v-else
               :number="card.number"
@@ -56,7 +88,7 @@
               :isFront="card.isFront"
               :isSelect="card.isSelect"
               :style="styleTop(index_column * 18)"
-              @click="onClickFieldCard(index_row, index_column)"
+              @click="onClickCard(card)"
               class="card"
               >
             </VSolitaireCard>
@@ -110,30 +142,76 @@ export default defineComponent({
     styleTop(num: number) {
       return { '--top': `${num}px` }
     },
-    getFieldBottomCard(x: number) {
-      const column = this.field[x]
-      return column[column.length - 1]
-    },
+    // getFieldBottomCard(x: number) {
+    //   const column = this.field[x]
+    //   return column[column.length - 1]
+    // },
     getPairCard(x: number) {
       return this.pairs[x][this.pairs[x].length - 1]
     },
     isSelect(row: number, column: number) {
       return true
     },
-    onClickFieldCard(x: number, y: number): void {
-      if (this.selectedCard === null) {
-        // 選択中のカードがない場合,タップしたカードを選択状態にする
-        this.getFieldBottomCard(x).isSelect = true
-        this.selectedCard = this.getFieldBottomCard(x)
-        this.selectedFieldRow = x
+    isPairCard(card: SolitaireCard): boolean {
+      return true
+    },
+    isHandCard(card: SolitaireCard): boolean {
+      return true
+    },
+    isDeckCard(card: SolitaireCard): boolean {
+      return true
+    },
+    isFieldCard(card: SolitaireCard): boolean {
+      let result = false
+      this.field.forEach((row) => {
+        row.forEach((fieldCard) => {
+          if (card === fieldCard) {
+            result = true
+          }
+        })
+      })
+      return result
+    },
+    getFieldBottomCard(card: SolitaireCard): SolitaireCard { // 引数のフィールドカードのボトムを取得する
+      let result: SolitaireCard = new SolitaireCard(0, 0, true, true)
+      this.field.forEach((row) => {
+        row.forEach((fieldCard) => {
+          if (card === fieldCard) {
+            result = row[row.length - 1]
+          }
+        })
+      })
+      return result
+    },
+    onClickCard(card: SolitaireCard) : void {
+      // すでに選択中のカードの有無と,今選択したカードによって挙動を変更する
+      if (this.selectedCard) {
+        console.log('fuga')
       } else {
-        // 選択中のカードがある場合,タップしたカードに応じて選択状態やアクションを決定する
-        this.selectedCard.isSelect = false
-        this.getFieldBottomCard(x).isSelect = true
-        this.selectedCard = this.getFieldBottomCard(x)
-        this.selectedFieldRow = x
+        if (this.isFieldCard(card)) {
+          this.selectedCard = this.getFieldBottomCard(card)
+          this.selectedCard.isSelect = true
+        } else {
+          this.selectedCard = card
+          this.selectedCard.isSelect = true
+        }
+        console.log(this.isFieldCard(card))
       }
     },
+    // onClickFieldCard(x: number, y: number): void {
+    //   if (this.selectedCard === null) {
+    //     // 選択中のカードがない場合,タップしたカードを選択状態にする
+    //     this.getFieldBottomCard(x).isSelect = true
+    //     this.selectedCard = this.getFieldBottomCard(x)
+    //     this.selectedFieldRow = x
+    //   } else {
+    //     // 選択中のカードがある場合,タップしたカードに応じて選択状態やアクションを決定する
+    //     this.selectedCard.isSelect = false
+    //     this.getFieldBottomCard(x).isSelect = true
+    //     this.selectedCard = this.getFieldBottomCard(x)
+    //     this.selectedFieldRow = x
+    //   }
+    // },
     onClickDeck() {
       this.selectedCard = null
       this.hands.push(this.deckTop)
@@ -146,6 +224,10 @@ export default defineComponent({
       })
       this.hands = new Array(0)
       this.hands.push(new SolitaireCard(0, 0, true, true))
+    },
+    onClickHand() {
+      this.selectedCard = this.handTop
+      this.getSelectedCard()
     },
     onClickPairCard(x: number): void {
       if (this.selectedCard === null) {
@@ -162,6 +244,16 @@ export default defineComponent({
           selectedRow[selectedRow.length - 1].isFront = true
         }
       }
+    },
+    getSelectedCard() : SolitaireCard | undefined {
+      let result
+      this.allCards.forEach((card) => {
+        if (card.isSelect) {
+          result = card
+        }
+      })
+      console.log(result)
+      return result
     },
     shuffle() {
       const cloneCards: Array<SolitaireCard> = [...this.allCards]
