@@ -55,9 +55,9 @@ export default defineComponent({
     markDisplay() {
       switch (this.mark) {
         case 0:
-          return '♤'
-        case 1:
           return '♡'
+        case 1:
+          return '♤'
         case 2:
           return '◇'
         case 3:
@@ -67,7 +67,7 @@ export default defineComponent({
       }
     },
     colorClass() {
-      if (this.mark === 0 || this.mark === 3) return 'color-black'
+      if (this.mark === 1 || this.mark === 3) return 'color-black'
       return 'color-red'
     },
   },
