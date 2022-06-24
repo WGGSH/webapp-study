@@ -34,7 +34,7 @@
         <div class="deck">
           <VSolitaireCardNull
             v-if="deckTop.isNull"
-            @click="onClickCard(deckTop)"
+            @click="onClickDeckBottom"
           />
           <VSolitaireCard
             v-else
@@ -325,6 +325,14 @@ export default defineComponent({
         this.selectedCard = null
         this.hands.pop()
       }
+    },
+    onClickDeckBottom() {
+      this.hands.reverse().forEach((card) => {
+        if (card.isNull) return
+        this.decks.push(card)
+      })
+      this.hands = new Array(0)
+      this.hands.push(new SolitaireCard(0, 0, true, true))
     },
     onClickCard(card: SolitaireCard) : void {
       // すでに選択中のカードの有無と,今選択したカードによって挙動を変更する
