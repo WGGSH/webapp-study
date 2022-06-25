@@ -4,19 +4,18 @@
     <div class="border">
       <div class="top-area">
         <div class="pairs">
-        <div v-for="(row, index_row) in pairs" :key="`pairs-${index_row}`" class="row">
-          <div v-for="(card) in row" :key="`13 * ${card.mark} + ${card.number}`" class="card">
-            <VSolitaireCardNull v-if="card.isNull" @click="onClickCard(card)"></VSolitaireCardNull>
-            <VSolitaireCard v-else
-              :number="card.number"
-              :mark="card.mark"
-              :isFront="card.isFront"
-              @click="onClickCard(card)"
-              class="card"
-            >
-            </VSolitaireCard>
+          <div v-for="(row, index_row) in pairs" :key="`pairs-${index_row}`" class="row">
+            <div v-for="(card) in row" :key="`13 * ${card.mark} + ${card.number}`" class="card">
+              <VSolitaireCardNull v-if="card.isNull" @click="onClickCard(card)"></VSolitaireCardNull>
+              <VSolitaireCard v-else
+                :number="card.number"
+                :mark="card.mark"
+                :isFront="card.isFront"
+                @click="onClickCard(card)"
+                class="card"
+              />
+            </div>
           </div>
-        </div>
         </div>
         <div class="hand">
           <VSolitaireCardNull
@@ -43,8 +42,7 @@
             :isFront="false"
             class="card"
             @click="onClickCard(deckTop)"
-          >
-          </VSolitaireCard>
+          />
         </div>
       </div>
       <div class="field">
@@ -60,8 +58,7 @@
               :style="styleTop(index_column * 18)"
               @click="onClickCard(card)"
               class="card"
-              >
-            </VSolitaireCard>
+            />
           </div>
         </div>
       </div>
@@ -91,7 +88,6 @@ export default defineComponent({
       decks: [] as Array<SolitaireCard>,
       hands: [] as Array<SolitaireCard>,
       selectedCard: null as SolitaireCard|null,
-      selectedFieldRow: -1 as number,
     }
   },
   computed: {
@@ -112,15 +108,8 @@ export default defineComponent({
     styleTop(num: number) {
       return { '--top': `${num}px` }
     },
-    // getFieldBottomCard(x: number) {
-    //   const column = this.field[x]
-    //   return column[column.length - 1]
-    // },
     getPairCard(x: number) {
       return this.pairs[x][this.pairs[x].length - 1]
-    },
-    isSelect(row: number, column: number) {
-      return true
     },
     isPairCard(card: SolitaireCard): boolean {
       let result = false
@@ -242,9 +231,6 @@ export default defineComponent({
       const fromRow = this.getTargetFieldRow(this.selectedCard)
       const targetRow = this.getTargetFieldRow(card)
 
-      console.log(fromRow)
-      console.log(targetRow)
-
       // 移動元のカードのうち,最も上に配置された表のカードを取得
       let fromTopCard: SolitaireCard | undefined
       for (let i = 0; i < fromRow.length; i++) {
@@ -265,7 +251,6 @@ export default defineComponent({
         // 移動成功
         for (let i = 0; i < fromRow.length; i++) {
           if (fromRow[i].isFront) {
-            console.log('move')
             const newRow = fromRow.splice(i)
             newRow.forEach((newCard) => {
               targetRow.push(newCard)
@@ -283,7 +268,6 @@ export default defineComponent({
       if (fromTopCard.number === 13 && targetBottomCard.isNull) {
         for (let i = 0; i < fromRow.length; i++) {
           if (fromRow[i].isFront) {
-            console.log('move')
             const newRow = fromRow.splice(i)
             newRow.forEach((newCard) => {
               targetRow.push(newCard)
@@ -381,7 +365,6 @@ export default defineComponent({
     shuffle() {
       const cloneCards: Array<SolitaireCard> = [...this.allCards]
       const size = this.allCards.length
-      console.log(size)
       for (let i = 0; i < 10000; i++) {
         const index1: number = Math.floor(Math.random() * size)
         const index2: number = Math.floor(Math.random() * size)
@@ -425,8 +408,6 @@ export default defineComponent({
 
     this.hands = new Array(0)
     this.hands.push(new SolitaireCard(0, 0, true, true))
-
-    console.log(this.decks)
   },
 })
 </script>
@@ -454,7 +435,6 @@ export default defineComponent({
         display: flex;
         justify-content:  space-between;
         width: 150px;
-        /* width: 60%; */
 
         > .row {
           > .card {

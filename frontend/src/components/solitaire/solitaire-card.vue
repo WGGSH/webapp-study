@@ -18,8 +18,7 @@
         </span>
       </v-card-text>
     </v-card>
-    <v-card v-else class="solitaire-card" color="red">
-    </v-card>
+    <v-card v-else class="solitaire-card" color="red" />
   </div>
 </template>
 
@@ -67,7 +66,7 @@ export default defineComponent({
       }
     },
     colorClass() {
-      if (this.mark === 1 || this.mark === 3) return 'color-black'
+      if (this.mark % 2 === 1) return 'color-black'
       return 'color-red'
     },
   },
