@@ -24,5 +24,6 @@ module.exports = {
     'max-len': 'off',
     'lines-between-class-members': 'off',
     'no-continue': 'off',
+    'arrow-body-style':'off',
   },
 }

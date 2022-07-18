@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import SlidePuzzleView from '../views/SlidePuzzleView.vue'
 import LifeGameView from '../views/LifeGameView.vue'
+import SolitaireView from '../views/SolitaireView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -26,6 +27,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/lifegame',
     name: 'life-game',
     component: LifeGameView,
+  },
+  {
+    path: '/solitaire',
+    name: 'solitaire',
+    component: SolitaireView,
   },
 ]
 
